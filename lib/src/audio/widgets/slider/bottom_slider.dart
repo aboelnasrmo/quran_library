@@ -39,11 +39,13 @@ class BottomSlider extends StatelessWidget {
       child: SlideTransition(
         position: sliderCtrl.bottomSlideAnim,
         child: Obx(() => Container(
-              // ارتفاع ديناميكي للسلايدر
-              // Dynamic height for slider
-              height: MediaQuery.of(context).size.height *
+              // ارتفاع ديناميكي للسلايدر مع حماية من التجاوز
+              // Dynamic height for slider with overflow protection
+              height: (MediaQuery.of(context).size.height *
                       sliderCtrl.bottomSliderHeight.value +
-                  sliderHeight!,
+                  (sliderHeight ?? 0.0)).clamp(
+                  80.0, // حد أدنى للارتفاع - يكفي للمحتوى الأساسي
+                  MediaQuery.of(context).size.height * 0.85), // حد أقصى أقل لتجنب التجاوز
               decoration: BoxDecoration(
                 color: style!.backgroundColor ?? Colors.white,
                 borderRadius: BorderRadius.only(
@@ -67,53 +69,66 @@ class BottomSlider extends StatelessWidget {
               child: LayoutBuilder(builder: (context, constraints) {
                 // تحديد ما إذا كان السلايدر في الحالة الصغيرة أم الكبيرة
                 // Determine if slider is in small or large state
-                final isSmallState = constraints.maxHeight < 150;
+                final isSmallState = constraints.maxHeight < 
+                    MediaQuery.of(context).size.height * 0.2;
 
-                return Column(
-                  mainAxisSize: MainAxisSize.min, // تغيير لـ min لتجنب overflow
-                  children: [
-                    // ====== Handle للسحب ======
-                    // ====== Drag Handle ======
-                    GestureDetector(
-                      // عند السحب للأعلى يفتح السلايدر، وعند السحب للأسفل يغلق
-                      // On vertical drag: up opens, down closes
-                      onVerticalDragUpdate: (details) {
-                        if (details.primaryDelta != null) {
-                          if (details.primaryDelta! < -8) {
-                            // سحب للأعلى: فتح السلايدر
-                            // Drag up: open
-                            sliderCtrl.setMediumHeight(context);
-                            sliderCtrl.updateBottomHandleVisibility(true);
-                            Future.delayed(
-                              const Duration(milliseconds: 400),
-                              () => QuranCtrl
-                                  .instance.state.isPlayExpanded.value = true,
-                            );
-                          } else if (details.primaryDelta! > 8) {
-                            // سحب للأسفل: إغلاق السلايدر
-                            // Drag down: close
-
-                            QuranCtrl.instance.state.isPlayExpanded.value =
-                                false;
-                            sliderCtrl.setSmallHeight();
-                          }
-                        }
-                      },
-                      child: Container(
-                        width: 70,
-                        height: 8,
-                        margin: const EdgeInsets.only(top: 8),
-                        decoration: BoxDecoration(
-                          color: Colors.grey,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
+                return SingleChildScrollView(
+                  physics: const ClampingScrollPhysics(),
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      minHeight: 0,
+                      maxHeight: constraints.maxHeight,
                     ),
-                    child,
-                    // تقليل المساحة في الحالة الصغيرة
-                    // Reduce space in small state
-                    SizedBox(height: isSmallState ? 4 : 8),
-                  ],
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        // ====== Handle للسحب ======
+                        // ====== Drag Handle ======
+                        GestureDetector(
+                          // عند السحب للأعلى يفتح السلايدر، وعند السحب للأسفل يغلق
+                          // On vertical drag: up opens, down closes
+                          onVerticalDragUpdate: (details) {
+                            if (details.primaryDelta != null) {
+                              if (details.primaryDelta! < -8) {
+                                // سحب للأعلى: فتح السلايدر
+                                // Drag up: open
+                                sliderCtrl.setMediumHeight(context);
+                                sliderCtrl.updateBottomHandleVisibility(true);
+                                Future.delayed(
+                                  const Duration(milliseconds: 400),
+                                  () => QuranCtrl
+                                      .instance.state.isPlayExpanded.value = true,
+                                );
+                              } else if (details.primaryDelta! > 8) {
+                                // سحب للأسفل: إغلاق السلايدر
+                                // Drag down: close
+                                QuranCtrl.instance.state.isPlayExpanded.value =
+                                    false;
+                                sliderCtrl.setSmallHeight();
+                              }
+                            }
+                          },
+                          child: Container(
+                            width: 70,
+                            height: 8,
+                            margin: const EdgeInsets.only(top: 8),
+                            decoration: BoxDecoration(
+                              color: Colors.grey,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                        ),
+                        // استخدام Flexible لتجنب overflow
+                        // Use Flexible to avoid overflow  
+                        Flexible(
+                          child: child,
+                        ),
+                        // تقليل المساحة في الحالة الصغيرة
+                        // Reduce space in small state
+                        SizedBox(height: isSmallState ? 2 : 4),
+                      ],
+                    ),
+                  ),
                 );
               }),
             )),
