@@ -16,14 +16,17 @@ class AyahsAudioWidget extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: const BorderRadius.all(Radius.circular(8)),
           ),
-          child: Obx(() => AnimatedCrossFade(
+          child: Obx(() => ClipRect(
+            child: AnimatedCrossFade(
                 // مطابقة مدة الأنيميشن مع السلايدر لتجنب overflow
                 // Match animation duration with slider to avoid overflow
-                duration: const Duration(milliseconds: 650),
+                duration: const Duration(milliseconds: 600),
                 reverseDuration: const Duration(milliseconds: 600),
-                secondCurve: Curves.easeOutBack,
+                firstCurve: Curves.easeInOut,
+                secondCurve: Curves.easeInOut,
+                sizeCurve: Curves.easeInOut, // تنسيق منحنى تغيير الحجم
                 firstChild: Container(
-                  height: 50,
+                  height: 80, // مطابقة مع الحد الأدنى للحالة الثانية
                   width: MediaQuery.sizeOf(context).width,
                   padding: const EdgeInsets.symmetric(horizontal: 32.0),
                   child: Row(
@@ -146,7 +149,10 @@ class AyahsAudioWidget extends StatelessWidget {
                 crossFadeState: quranCtrl.state.isPlayExpanded.value
                     ? CrossFadeState.showSecond
                     : CrossFadeState.showFirst,
-              ))),
-    );
+            ) // End AnimatedCrossFade
+          ) // End ClipRect  
+        ) // End Obx
+      ) // End Container
+    ); // End Directionality
   }
 }
