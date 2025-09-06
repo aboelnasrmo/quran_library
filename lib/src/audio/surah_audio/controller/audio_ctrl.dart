@@ -67,6 +67,7 @@ class AudioCtrl extends GetxController {
   @override
   void onClose() {
     state.audioPlayer.pause();
+    state.isPlayingSurahsMode = false;
     state.audioPlayer.dispose();
     super.onClose();
   }

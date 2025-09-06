@@ -27,6 +27,7 @@ extension SurahCtrlExtension on AudioCtrl {
 
   Future<void> playSurah({required int surahNumber}) async {
     state.currentAudioListSurahNum.value = surahNumber;
+    state.isPlayingSurahsMode = true;
     changeAudioSource();
     cancelDownload();
     state.isPlaying.value = true;

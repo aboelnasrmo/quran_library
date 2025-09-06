@@ -164,6 +164,10 @@ extension AyahCtrlExtension on AudioCtrl {
       {required bool playSingleAyah}) async {
     state.playSingleAyahOnly = playSingleAyah;
     state.currentAyahUniqueNumber = currentAyahUniqueNumber;
+    
+    // Reset surah mode flag to prevent surah continuation after verse playback
+    state.isPlayingSurahsMode = false;
+    
     QuranCtrl.instance.isShowControl.value = true;
     SliderController.instance.setMediumHeight(context);
     SliderController.instance.updateBottomHandleVisibility(true);

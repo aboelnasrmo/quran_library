@@ -31,6 +31,7 @@ class SurahOnlinePlayButton extends StatelessWidget {
                 ),
                 onPressed: () async {
                   surahAudioCtrl.cancelDownload();
+                  surahAudioCtrl.state.isPlayingSurahsMode = true;
                   surahAudioCtrl.state.isPlaying.value = true;
                   // await surahAudioCtrl.state.audioPlayer.pause();
                   surahAudioCtrl.state
