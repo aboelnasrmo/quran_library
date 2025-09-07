@@ -22,6 +22,7 @@ class SurahState {
   RxString ayahReaderValue = "https://download.quranicaudio.com/quran/".obs;
   RxString ayahReaderNameValue = "abdul_basit_murattal/".obs;
   final bool isDisposed = false;
+  StreamSubscription<PlayerState>? playerStateSubscription;
   List<AudioSource>? surahsPlayList;
   List<Map<int, AudioSource>> downloadSurahsPlayList = [];
   double? lastTime;

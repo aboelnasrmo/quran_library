@@ -55,7 +55,7 @@ class AudioCtrl extends GetxController {
     //     .then((_) => jumpToSurah(state.currentAudioListSurahNum.value - 1));
 
     // Listen to player state changes to play the next Surah automatically
-    state.audioPlayer.playerStateStream.listen((playerState) async {
+    state.playerStateSubscription = state.audioPlayer.playerStateStream.listen((playerState) async {
       if (playerState.processingState == ProcessingState.completed &&
           state.isPlayingSurahsMode) {
         await playNextSurah();
@@ -66,8 +66,7 @@ class AudioCtrl extends GetxController {
 
   @override
   void onClose() {
-    state.audioPlayer.pause();
-    state.audioPlayer.dispose();
+    stopPlayer();
     super.onClose();
   }
 
@@ -132,11 +131,6 @@ class AudioCtrl extends GetxController {
         }
       }
     }
-    state.audioPlayer.playerStateStream.listen((playerState) async {
-      if (playerState.processingState == ProcessingState.completed) {
-        await playNextSurah();
-      }
-    });
   }
 
   Future<String> _downloadFileIfNotExist(String url, String fileName,
@@ -297,7 +291,7 @@ class AudioCtrl extends GetxController {
   Future<void> startDownload({int? surahNumber}) async {
     // إزالة BuildContext تماماً وجعل الدالة تستخدم Get.context داخلياً
     // Remove BuildContext completely and let the function use Get.context internally
-    await state.audioPlayer.pause();
+    await reinitializePlayer();
     await downloadSurah(surahNum: surahNumber);
   }
 
@@ -349,6 +343,27 @@ class AudioCtrl extends GetxController {
     await state.audioPlayer.pause();
   }
 
+  Future<void> stopPlayer() async {
+    state.isPlaying.value = false;
+    await state.audioPlayer.stop();
+    await state.playerStateSubscription?.cancel();
+    state.playerStateSubscription = null;
+    await state.audioPlayer.dispose();
+  }
+
+  Future<void> reinitializePlayer() async {
+    await stopPlayer();
+    state.audioPlayer = AudioPlayer();
+    
+    // Re-setup the player state listener
+    state.playerStateSubscription = state.audioPlayer.playerStateStream.listen((playerState) async {
+      if (playerState.processingState == ProcessingState.completed &&
+          state.isPlayingSurahsMode) {
+        await playNextSurah();
+      }
+    });
+  }
+
   /// تحديث رابط أيقونة التطبيق / Update app icon URL
   /// [iconUrl] - الرابط الجديد لأيقونة التطبيق / New URL for app icon
   Future<void> updateAppIconUrl(String iconUrl) async {
@@ -382,8 +397,7 @@ class AudioCtrl extends GetxController {
 
   void didChangeAppLifecycleState(AppLifecycleState states) {
     if (states == AppLifecycleState.paused) {
-      state.audioPlayer.stop();
-      state.isPlaying.value = false;
+      stopPlayer();
     }
   }
 }
