@@ -347,7 +347,9 @@ class AudioCtrl extends GetxController {
     state.isPlaying.value = false;
     await state.audioPlayer.stop();
     await state.playerStateSubscription?.cancel();
+    await state.indexStreamSubscription?.cancel();
     state.playerStateSubscription = null;
+    state.indexStreamSubscription = null;
     await state.audioPlayer.dispose();
   }
 

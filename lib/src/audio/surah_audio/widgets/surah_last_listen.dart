@@ -16,12 +16,8 @@ class SurahLastListen extends StatelessWidget {
       enabled: true,
       label: 'lastListen'.tr,
       child: GestureDetector(
-        onTap: () {
-          surahAudioCtrl
-              .lastAudioSource()
-              .then((_) => surahAudioCtrl.state.audioPlayer.play());
-          // surahAudioCtrl.jumpToSurah(
-          //     (surahAudioCtrl.state.currentAudioListSurahNum.value - 1));
+        onTap: () async {
+          await surahAudioCtrl.playSurah(surahNumber: surahAudioCtrl.state.currentAudioListSurahNum.value);
         },
         child: Container(
           width: 250,

@@ -23,6 +23,7 @@ class SurahState {
   RxString ayahReaderNameValue = "abdul_basit_murattal/".obs;
   final bool isDisposed = false;
   StreamSubscription<PlayerState>? playerStateSubscription;
+  StreamSubscription<int?>? indexStreamSubscription;
   List<AudioSource>? surahsPlayList;
   List<Map<int, AudioSource>> downloadSurahsPlayList = [];
   double? lastTime;

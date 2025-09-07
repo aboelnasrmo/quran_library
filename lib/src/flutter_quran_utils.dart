@@ -952,8 +952,7 @@ class QuranLibrary {
   /// ),
   /// ```
   Future<void> playLastPosition() async => await AudioCtrl.instance
-      .lastAudioSource()
-      .then((_) => AudioCtrl.instance.state.audioPlayer.play());
+      .playSurah(surahNumber: AudioCtrl.instance.state.currentAudioListSurahNum.value);
 
   /// [hafsStyle] هو النمط الافتراضي للقرآن، مما يضمن عرض جميع الأحرف الخاصة بشكل صحيح.
   ///

@@ -30,15 +30,7 @@ class SurahOnlinePlayButton extends StatelessWidget {
                   color: style?.playIconColor ?? Colors.blue,
                 ),
                 onPressed: () async {
-                  surahAudioCtrl.cancelDownload();
-                  surahAudioCtrl.state.isPlaying.value = true;
-                  // await surahAudioCtrl.state.audioPlayer.pause();
-                  surahAudioCtrl.state
-                          .isSurahDownloadedByNumber(surahAudioCtrl
-                              .state.currentAudioListSurahNum.value)
-                          .value
-                      ? await surahAudioCtrl.startDownload()
-                      : await surahAudioCtrl.state.audioPlayer.play();
+                  await surahAudioCtrl.playSurah(surahNumber: surahAudioCtrl.state.currentAudioListSurahNum.value);
                 },
               );
             } else if (processingState != ProcessingState.completed ||
@@ -51,8 +43,7 @@ class SurahOnlinePlayButton extends StatelessWidget {
                   color: style?.playIconColor ?? Colors.blue,
                 ),
                 onPressed: () {
-                  surahAudioCtrl.state.isPlaying.value = false;
-                  surahAudioCtrl.state.audioPlayer.pause();
+                  surahAudioCtrl.pausePlayer();
                 },
               );
             } else {

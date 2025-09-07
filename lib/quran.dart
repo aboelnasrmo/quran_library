@@ -16,6 +16,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart' hide Response;
 import 'package:get_storage/get_storage.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'src/audio/audio.dart';
@@ -99,6 +100,9 @@ part 'src/quran/presentation/widgets/top_bottom_widget/top_and_bottom_widget.dar
 ///
 /// To use this library, import `package:quran_library/quran_library.dart` and utilize
 /// the provided classes and functions. Ensure that all required assets (fonts, JSONs, DB) are correctly configured in `pubspec.yaml`.
+
+// Export just_audio classes for external use
+export 'package:just_audio/just_audio.dart';
 
 
 

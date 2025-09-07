@@ -14,7 +14,7 @@ extension AyahCtrlExtension on AudioCtrl {
 
     try {
       if (state.isPlaying.value || state.audioPlayer.playing) {
-        await state.audioPlayer.stop();
+        await reinitializePlayer();
       }
       QuranCtrl.instance.toggleAyahSelection(state.currentAyahUniqueNumber);
       final filePath = isSurahDownloaded
@@ -116,7 +116,7 @@ extension AyahCtrlExtension on AudioCtrl {
           name: 'AudioController');
 
       // الاستماع لتغييرات الفهرس / Listen to index changes
-      state.audioPlayer.currentIndexStream.listen((index) async {
+      state.indexStreamSubscription = state.audioPlayer.currentIndexStream.listen((index) async {
         final currentIndex = (state.audioPlayer.currentIndex ?? 0);
         log('index: $index | currentIndex: $currentIndex', name: 'index');
         if (index != null && index < ayahsFilesNames.length) {
@@ -139,7 +139,7 @@ extension AyahCtrlExtension on AudioCtrl {
       state.isPlaying.value = true;
       await state.audioPlayer.play();
 
-      state.audioPlayer.playerStateStream.listen((d) {
+      state.playerStateSubscription = state.audioPlayer.playerStateStream.listen((d) {
         if (d.processingState == ProcessingState.completed &&
             !state.playSingleAyahOnly &&
             currentSurahNumber < 114) {
@@ -167,7 +167,7 @@ extension AyahCtrlExtension on AudioCtrl {
     QuranCtrl.instance.isShowControl.value = true;
     SliderController.instance.setMediumHeight(context);
     SliderController.instance.updateBottomHandleVisibility(true);
-    if (state.audioPlayer.playing) await pausePlayer();
+    if (state.audioPlayer.playing) await reinitializePlayer();
     Future.delayed(
       const Duration(milliseconds: 400),
       () => QuranCtrl.instance.state.isPlayExpanded.value = true,
