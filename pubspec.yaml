@@ -1,0 +1,101 @@
+name: quran_library
+description: "An integrated package for displaying the Holy Qur’an identical to
+  the Medina Quran with the narration of Hafs on the authority of Asim."
+version: 2.0.9+7
+homepage: https://github.com/alheekmahlib/quran_library
+documentation: https://alheekmahlib.github.io/quran_library_web/
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+  flutter: ">=1.20.0"
+
+dependencies:
+  another_xlider: ^3.0.2
+  archive: ^4.0.7
+  audio_service: ^0.18.18
+  audio_session: ^0.2.2
+  toastification: ^3.0.3
+  connectivity_plus: ^6.1.4
+  dio: ^5.8.0+1
+  drift: ^2.27.0
+  flutter:
+    sdk: flutter
+  flutter_cache_manager: ^3.4.1
+  flutter_screenutil: ^5.9.3
+  flutter_svg: ^2.1.0
+  get: ^4.7.2
+  get_storage: ^2.1.1
+  just_audio: ^0.10.5
+  lottie: ^3.3.1
+  path: ^1.9.0
+  path_provider: ^2.1.5
+  rxdart: ^0.28.0
+  scrollable_positioned_list: ^0.3.8
+  flutter_sliding_panel: ^0.0.5
+
+# This package supports all platforms listed below.
+# But note that it works and fits on mobile size devices
+# Additional Screen Sizes will be supported later
+platforms:
+  #  web:
+  ? android
+  ? ios
+  ? linux
+  ? macos
+  ? windows
+
+dev_dependencies:
+  build_runner: ^2.4.15
+  drift_dev: ^2.26.0
+  flutter_lints: ^5.0.0
+  flutter_test:
+    sdk: flutter
+
+package_rename_config:
+  android:
+    package_name: com.alheekmah.quranPackage
+
+  ios:
+    bundle_name: com.alheekmah.quranPackage
+    package_name: com.alheekmah.quranPackage
+
+  linux:
+    package_name: com.alheekmah.quranPackage
+
+  macos:
+    package_name: com.alheekmah.quranPackage
+
+flutter:
+  plugin:
+    platforms:
+      android:
+        package: com.alheekmah.quranPackage
+        pluginClass: QuranLibraryPlugin
+      # ios:
+      #   pluginClass: QuranLibraryPlugin
+
+  assets:
+    - assets/
+    - assets/fonts/
+    - assets/fonts/Kufam-Regular.ttf
+    - assets/fonts/NotoNaskhArabic-VariableFont_wght.ttf
+    - assets/fonts/UthmanicHafs_V20.ttf
+    - assets/jsons/
+    - assets/lottie/
+    - assets/svg/
+    - assets/saadiV4.db
+    - assets/en.json
+
+  fonts:
+    - family: kufi
+      fonts:
+        - asset: assets/fonts/Kufam-Regular.ttf
+    - family: naskh
+      fonts:
+        - asset: assets/fonts/NotoNaskhArabic-VariableFont_wght.ttf
+    - family: hafs
+      fonts:
+        - asset: assets/fonts/UthmanicHafs_V20.ttf
+    - family: surahName
+      fonts:
+        - asset: assets/fonts/surah_name_naskh.ttf
